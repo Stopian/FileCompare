@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+// placeholder
 using System.Drawing;
 
 namespace FileCompare
@@ -10,6 +11,110 @@ namespace FileCompare
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void btnCopyFromLeft_Click(object sender, EventArgs e)
+        {
+            CopySelected(fromLeft: true);
+        }
+
+        private void btnCopyFromRight_Click(object sender, EventArgs e)
+        {
+            CopySelected(fromLeft: false);
+        }
+
+        private void CopySelected(bool fromLeft)
+        {
+            var srcLv = fromLeft ? lvwLeftDir : lvwRightDir;
+            var dstLv = fromLeft ? lvwRightDir : lvwLeftDir;
+            var srcDir = fromLeft ? txtLeftDir.Text : txtRightDir.Text;
+            var dstDir = fromLeft ? txtRightDir.Text : txtLeftDir.Text;
+
+            if (string.IsNullOrWhiteSpace(srcDir) || !Directory.Exists(srcDir))
+            {
+                MessageBox.Show("복사할 폴더가 설정되어 있지 않습니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(dstDir) || !Directory.Exists(dstDir))
+            {
+                MessageBox.Show("대상 폴더가 설정되어 있지 않습니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (srcLv.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("복사할 파일을 선택하세요.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            foreach (ListViewItem item in srcLv.SelectedItems)
+            {
+                var name = item.Text;
+                var srcFull = Path.Combine(srcDir, name);
+                var dstFull = Path.Combine(dstDir, name);
+
+                if (!File.Exists(srcFull))
+                {
+                    // skip directories or missing files
+                    continue;
+                }
+
+                var dstItem = dstLv.Items.Cast<ListViewItem>().FirstOrDefault(i => string.Equals(i.Text, name, StringComparison.CurrentCultureIgnoreCase));
+
+                var srcColor = item.ForeColor;
+                var dstColor = dstItem?.ForeColor ?? Color.Transparent;
+
+                // If destination exists and is gray and source is red => ask confirmation
+                if (dstItem != null && dstColor == Color.Gray && srcColor == Color.Red)
+                {
+                    var dr = MessageBox.Show($"대상에 있는 파일은 오래된 파일(회색)입니다. 덮어씌우시겠습니까?\n{dstFull}", "경고", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (dr != DialogResult.Yes) continue;
+                }
+
+                // perform copy (overwrite)
+                try
+                {
+                    File.Copy(srcFull, dstFull, true);
+                    // ensure write time matches
+                    var srcTime = File.GetLastWriteTime(srcFull);
+                    File.SetLastWriteTime(dstFull, srcTime);
+
+                    // update or add destination item
+                    var fi = new FileInfo(srcFull);
+                    var modified = fi.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    string sizeText = fi.Length < 1024 ? "<1 KB" : string.Format("{0:N0} KB", Math.Round(fi.Length / 1024.0));
+
+                    if (dstItem == null)
+                    {
+                        var newItem = new ListViewItem(name);
+                        newItem.SubItems.Add(modified);
+                        newItem.SubItems.Add(sizeText);
+                        newItem.SubItems.Add(string.Empty);
+                        newItem.Tag = fi.LastWriteTime.Ticks;
+                        dstLv.Items.Add(newItem);
+                        dstItem = newItem;
+                    }
+                    else
+                    {
+                        dstItem.SubItems[1].Text = modified;
+                        dstItem.SubItems[2].Text = sizeText;
+                        dstItem.Tag = fi.LastWriteTime.Ticks;
+                    }
+
+              
+                    item.SubItems[1].Text = modified;
+                    item.SubItems[2].Text = sizeText;
+                    item.Tag = fi.LastWriteTime.Ticks;
+
+     
+                    SetItemStatus(item, "동일", Color.Black);
+                    SetItemStatus(dstItem, "동일", Color.Black);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"파일 복사 중 오류가 발생했습니다: {ex.Message}", "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void btnLeftDir_Click(object sender, EventArgs e)
