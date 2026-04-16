@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace FileCompare
 {
     public partial class Form1 : Form
@@ -19,6 +21,7 @@ namespace FileCompare
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     txtLeftDir.Text = dlg.SelectedPath;
+                    PopulateListView(lvwLeftDir, dlg.SelectedPath);
                 }
             }
         }
@@ -35,7 +38,29 @@ namespace FileCompare
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     txtRightDir.Text = dlg.SelectedPath;
+                    PopulateListView(lvwRightDir, dlg.SelectedPath);
                 }
+            }
+        }
+
+        private void PopulateListView(ListView lv, string path)
+        {
+            lv.Items.Clear();
+            if (!Directory.Exists(path)) return;
+            try
+            {
+                var di = new DirectoryInfo(path);
+                foreach (var fi in di.GetFiles())
+                {
+                    var lvi = new ListViewItem(fi.Name);
+                    lvi.SubItems.Add(fi.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                    lvi.SubItems.Add(fi.Length.ToString());
+                    lv.Items.Add(lvi);
+                }
+            }
+            catch
+            {
+                // ignore
             }
         }
     }

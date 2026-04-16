@@ -42,6 +42,9 @@
             btnCopyFromLeft = new Button();
             pnlRightBottom = new Panel();
             lvwRightDir = new ListView();
+            columnHeader4 = new ColumnHeader();
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
             pnlRightMiddle = new Panel();
             btnRightDir = new Button();
             txtRightDir = new TextBox();
@@ -100,10 +103,22 @@
             lvwLeftDir.Size = new Size(551, 552);
             lvwLeftDir.TabIndex = 5;
             lvwLeftDir.UseCompatibleStateImageBehavior = false;
+            lvwLeftDir.View = View.Details;
             // 
             // columnHeader1
             // 
             columnHeader1.Text = "이름";
+            columnHeader1.Width = 300;
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "수정일";
+            columnHeader2.Width = 180;
+            // 
+            // columnHeader3
+            // 
+            columnHeader3.Text = "크기";
+            columnHeader3.Width = 100;
             // 
             // pnlLeftMiddle
             // 
@@ -178,12 +193,31 @@
             // 
             // lvwRightDir
             // 
+            lvwRightDir.Columns.AddRange(new ColumnHeader[] { columnHeader4, columnHeader5, columnHeader6 });
             lvwRightDir.Dock = DockStyle.Fill;
+            lvwRightDir.FullRowSelect = true;
+            lvwRightDir.GridLines = true;
             lvwRightDir.Location = new Point(0, 0);
             lvwRightDir.Name = "lvwRightDir";
             lvwRightDir.Size = new Size(569, 548);
             lvwRightDir.TabIndex = 5;
             lvwRightDir.UseCompatibleStateImageBehavior = false;
+            lvwRightDir.View = View.Details;
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "이름";
+            columnHeader4.Width = 300;
+            // 
+            // columnHeader5
+            // 
+            columnHeader5.Text = "수정일";
+            columnHeader5.Width = 180;
+            // 
+            // columnHeader6
+            // 
+            columnHeader6.Text = "크기";
+            columnHeader6.Width = 100;
             // 
             // pnlRightMiddle
             // 
@@ -282,5 +316,8 @@
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
     }
 }
