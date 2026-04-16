@@ -34,6 +34,7 @@
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
             columnHeader3 = new ColumnHeader();
+            columnHeader7 = new ColumnHeader();
             pnlLeftMiddle = new Panel();
             btnLeftDir = new Button();
             txtLeftDir = new TextBox();
@@ -45,6 +46,7 @@
             columnHeader4 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
+            columnHeader8 = new ColumnHeader();
             pnlRightMiddle = new Panel();
             btnRightDir = new Button();
             txtRightDir = new TextBox();
@@ -94,7 +96,7 @@
             // 
             // lvwLeftDir
             // 
-            lvwLeftDir.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3 });
+            lvwLeftDir.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader7 });
             lvwLeftDir.Dock = DockStyle.Fill;
             lvwLeftDir.FullRowSelect = true;
             lvwLeftDir.GridLines = true;
@@ -119,6 +121,11 @@
             // 
             columnHeader3.Text = "크기";
             columnHeader3.Width = 100;
+            // 
+            // columnHeader7
+            // 
+            columnHeader7.Text = "상태";
+            columnHeader7.Width = 120;
             // 
             // pnlLeftMiddle
             // 
@@ -193,7 +200,7 @@
             // 
             // lvwRightDir
             // 
-            lvwRightDir.Columns.AddRange(new ColumnHeader[] { columnHeader4, columnHeader5, columnHeader6 });
+            lvwRightDir.Columns.AddRange(new ColumnHeader[] { columnHeader4, columnHeader5, columnHeader6, columnHeader8 });
             lvwRightDir.Dock = DockStyle.Fill;
             lvwRightDir.FullRowSelect = true;
             lvwRightDir.GridLines = true;
@@ -218,6 +225,11 @@
             // 
             columnHeader6.Text = "크기";
             columnHeader6.Width = 100;
+            // 
+            // columnHeader8
+            // 
+            columnHeader8.Text = "상태";
+            columnHeader8.Width = 120;
             // 
             // pnlRightMiddle
             // 
@@ -316,6 +328,8 @@
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader8;
         private ColumnHeader columnHeader4;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
